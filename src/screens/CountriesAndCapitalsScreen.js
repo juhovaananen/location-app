@@ -1,36 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { View, TextInput, FlatList, Text } from 'react-native';
+import React from 'react';
+import { View, Text, FlatList } from 'react-native';
+
+const countries = [
+  { name: 'France', capital: 'Paris' },
+  { name: 'Japan', capital: 'Tokyo' },
+  { name: 'India', capital: 'New Delhi' },
+];
 
 const CountriesAndCapitalsScreen = () => {
-  const [countries, setCountries] = useState([]);
-  const [search, setSearch] = useState('');
-
-  useEffect(() => {
-    const fetchCountries = async () => {
-      const response = await fetch('https://restcountries.com/v3.1/all');
-      const data = await response.json();
-      setCountries(data);
-    };
-
-    fetchCountries();
-  }, []);
-
-  const filteredCountries = countries.filter(country =>
-    country.name.common.toLowerCase().includes(search.toLowerCase())
-  );
-
   return (
     <View>
-      <TextInput
-        placeholder="Search for a country"
-        value={search}
-        onChangeText={setSearch}
-      />
       <FlatList
-        data={filteredCountries}
-        keyExtractor={item => item.cca3}
+        data={countries}
+        keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
-          <Text>{item.name.common} - {item.capital}</Text>
+          <Text>{item.name} - Capital: {item.capital}</Text>
         )}
       />
     </View>
