@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore"; // Import Firestore
+import { getFirestore } from "firebase/firestore"; 
 
-// Your web app's Firebase configuration
+
 const firebaseConfig = {
   apiKey: "AIzaSyDI5ej6tqxThv804hwIOTgc19HmTrl7OHs",
   authDomain: "locationapp-6e8ff.firebaseapp.com",
@@ -12,8 +12,8 @@ const firebaseConfig = {
   measurementId: "G-FH1KQ1QNC1"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const firestore = getFirestore(app); // Initialize Firestore
 
-export { firestore }; // Export Firestore for use in your app
+const app = initializeApp(firebaseConfig);
+const firestore = getFirestore(app); 
+
+export { firestore }; 

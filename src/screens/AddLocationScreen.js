@@ -1,61 +1,71 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, Alert, Text } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { View, TextInput, Button, StyleSheet, Alert, Text } from 'react-native';
 import { firestore } from '../firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
 import StarRating from 'react-native-star-rating-widget';
+import { AuthContext } from '../context/AuthContext';
+
+
 
 const AddLocationScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [rating, setRating] = useState(0);
+  const { user } = useContext(AuthContext);
 
   const handleAddLocation = async () => {
-    if (!name.trim()) return Alert.alert('Please enter a location name');
-    if (!description.trim()) return Alert.alert('Please enter a description');
-    if (rating <= 0) return Alert.alert('Please select a rating');
+    if (!name.trim()) {
+      Alert.alert('Please enter a location name');
+      return;
+    }
 
     try {
       await addDoc(collection(firestore, 'locations'), {
         name,
         description,
         rating,
+        user,
       });
+
       Alert.alert('Location added!');
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Error adding location');
+      Alert.alert('Error adding location:', error.message);
     }
   };
 
   return (
-    <View style={{ padding: 16 }}>
+    <View style={styles.container}>
       <TextInput
-        placeholder="Location name"
+        placeholder="Location Name"
         value={name}
         onChangeText={setName}
-        style={{ marginBottom: 10, borderBottomWidth: 1 }}
+        style={styles.input}
       />
       <TextInput
         placeholder="Description"
         value={description}
         onChangeText={setDescription}
-        style={{ marginBottom: 10, borderBottomWidth: 1 }}
+        style={styles.input}
       />
+      <Text>Rating:</Text>
+      <StarRating rating={rating} onChange={setRating} starSize={30} />
 
-      <Text style={{ marginBottom: 5 }}>Rating:</Text>
-      <StarRating
-        rating={rating}
-        onChange={setRating}
-        starSize={30}
-        maxStars={5}
-        enableHalfStar={true}
-      />
-
-      <View style={{ marginTop: 20 }}>
-        <Button title="Add Location" onPress={handleAddLocation} />
-      </View>
+      <Button title="Save Location" onPress={handleAddLocation} />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    flex: 1,
+  },
+  input: {
+    marginBottom: 12,
+    borderBottomWidth: 1,
+    padding: 8,
+  },
+});
 
 export default AddLocationScreen;

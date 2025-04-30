@@ -1,20 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, Button, FlatList, StyleSheet } from 'react-native';
 import { firestore } from '../firebaseConfig';
 import { collection, onSnapshot } from 'firebase/firestore';
 import StarRating from 'react-native-star-rating-widget';
+import { AuthContext } from '../context/AuthContext';
+
 
 const LocationListScreen = ({ navigation }) => {
   const [locations, setLocations] = useState([]);
+  const { user, logout } = useContext(AuthContext);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(firestore, 'locations'), (snapshot) => {
-      const locationsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setLocations(locationsData);
+      const allLocations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const userLocations = allLocations.filter(loc => loc.user === user);
+      setLocations(userLocations);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [user]);
 
   return (
     <View style={styles.container}>

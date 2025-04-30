@@ -3,8 +3,9 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 
+
 const MapScreen = ({ route }) => {
-  const { location } = route.params; // location.name is expected
+  const { location } = route.params; 
   const [coords, setCoords] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 

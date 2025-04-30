@@ -1,26 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, TextInput, Button, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthContext } from '../context/AuthContext';
 
-const LoginScreen = ({ navigation }) => {
+
+const LoginScreen = () => {
   const [username, setUsername] = useState('');
+  const { login } = useContext(AuthContext);
 
-  const handleLogin = async () => {
-    // Simulate a login process
-    if (username) {
-      await AsyncStorage.setItem('user', username);
-      navigation.navigate('LocationList');
-    } else {
+  const handleLogin = () => {
+    if (!username.trim()) {
       Alert.alert('Please enter a username');
+      return;
     }
+    login(username);
   };
 
   return (
-    <View>
+    <View style={{ padding: 16 }}>
       <TextInput
         placeholder="Enter your username"
         value={username}
         onChangeText={setUsername}
+        style={{ marginBottom: 10, borderBottomWidth: 1 }}
       />
       <Button title="Login" onPress={handleLogin} />
     </View>
